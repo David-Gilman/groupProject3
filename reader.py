@@ -19,9 +19,6 @@ def main():
             print("Log retrieved\n")
 
     start = timer()
-    months_list = []
-    '''for i in range(1, 13):
-        months_list.append(datetime.date(2017, i, 1).strftime('%B'))'''
     requests, fail, redirect, bad = 0, 0, 0, 0
     files, weekday, week, month = {}, {}, {}, {}
     for i in range(0, 7):
@@ -30,7 +27,6 @@ def main():
         week[i] = 0
     for i in range(0, 12):
         month[i] = 0
-    conv = dict((v, k) for k, v in enumerate(calendar.month_abbr))
     reg = re.compile('.*\[([^:]*):(.*) -\d{3,4}\].*')
 
     for line in fo:
@@ -51,7 +47,6 @@ def main():
             with open(calendar.month_name[event.month]+".log", "a+") as curr:
                 curr.write(line)
                 curr.close()
-
 
         except IndexError:
             bad += 1
@@ -91,4 +86,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-# iremote - - [13/Feb/1995:10:48:26 -0700] "GET index.html HTTP/1.0" 200 9902
