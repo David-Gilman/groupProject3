@@ -1,2 +1,4 @@
 http_access_log
 *.json
+*.txt
+*.log

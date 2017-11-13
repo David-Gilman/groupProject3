@@ -2,6 +2,7 @@ import calendar
 import re
 from datetime import datetime
 from timeit import default_timer as timer
+import json
 
 
 def main():
@@ -18,6 +19,9 @@ def main():
             print("Log retrieved\n")
 
     start = timer()
+    months_list = []
+    '''for i in range(1, 13):
+        months_list.append(datetime.date(2017, i, 1).strftime('%B'))'''
     requests, fail, redirect, bad = 0, 0, 0, 0
     files, weekday, week, month = {}, {}, {}, {}
     for i in range(0, 7):
@@ -44,17 +48,31 @@ def main():
             weekday[event.weekday()] += 1
             week[event.isocalendar()[1] - 1] += 1
             month[event.month - 1] += 1
+            with open(calendar.month_name[i - 1]+".log", "w+") as curr:
+                curr.write(line + '\n')
 
 
         except IndexError:
             bad += 1
             pass
 
+    fo.close()
+
+    f = open('weeks.json', 'w+')
+    f.truncate()
+    f.write(json.dumps(week))
+    f.close()
+
+    f = open('orphans.txt', 'w+')
+    f.truncate()
+    for fi in files:
+        if files[fi] == 1:
+            f.write(fi + ', ')
+    f.close()
+
     end = timer()
-    print(str(round(end - start)) + " Seconds for processing")
-    print("")
-    print("Invalid log entries: " + str(bad) + " representing " + str(round((bad / (bad + requests)), 4) * 100) + "%")
-    print("")
+    print(str(round(end - start)) + " Seconds for processing\n")
+    print("Invalid log entries: " + str(bad) + " representing " + str(round((bad / (bad + requests)), 4) * 100) + "%\n")
     print("1. Total requests: " + str(requests))
     print("2. Requests per day: ")
     for i in range(7):
@@ -67,10 +85,7 @@ def main():
     print("4. Redirected requests: " + str(round((redirect / requests), 4) * 100) + "%")
     print("5. Most requested file: " + max(files, key=files.get))
     print("6. Files requested only once are stored in orphans.txt")
-    print("See this directory for 12 .log files, each storing the data for the proper month")
-    # print("Least requested file: " + min(files, key=files.get))
-
-    fo.close()
+    print("See this directory for 12 .log files, each storing the data for the proper month\n")
 
 
 if __name__ == '__main__':
