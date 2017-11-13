@@ -48,8 +48,9 @@ def main():
             weekday[event.weekday()] += 1
             week[event.isocalendar()[1] - 1] += 1
             month[event.month - 1] += 1
-            with open(calendar.month_name[i - 1]+".log", "w+") as curr:
-                curr.write(line + '\n')
+            with open(calendar.month_name[event.month]+".log", "a+") as curr:
+                curr.write(line)
+                curr.close()
 
 
         except IndexError:
